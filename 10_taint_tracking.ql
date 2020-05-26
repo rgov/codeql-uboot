@@ -8,8 +8,10 @@ import DataFlow::PathGraph
  
 class NetworkByteSwap extends Expr {
   NetworkByteSwap () {
-    exists(MacroInvocation mi | mi.getExpr() = this
-                                and mi.getMacroName().regexpMatch("^ntoh.*$"))
+    exists(MacroInvocation mi |
+        mi.getExpr() = this
+        and mi.getMacroName().regexpMatch("^ntoh.*$")
+    )
   }
 }
 
@@ -22,8 +24,10 @@ class Config extends TaintTracking::Configuration {
   }
 
   override predicate isSink(DataFlow::Node sink) {
-    sink.getFunction().getName() = "memcpy"
-    and sink.asParameter().getIndex() = 2
+    exists(FunctionCall c |
+        c.getTarget().getName() = "memcpy"
+        and c.getArgument(2) = sink.asExpr()
+    )
   }
 }
 
