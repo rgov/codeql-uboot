@@ -22,7 +22,7 @@ class Config extends TaintTracking::Configuration {
   }
 
   override predicate isSink(DataFlow::Node sink) {
-    sink.asParameter().getFunction().getName() = "memcpy"
+    sink.getFunction().getName() = "memcpy"
     and sink.asParameter().getIndex() = 2
   }
 }
